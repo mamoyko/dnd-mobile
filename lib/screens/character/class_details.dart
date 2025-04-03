@@ -7,10 +7,11 @@ class ClassDetailsScreen extends StatefulWidget {
   const ClassDetailsScreen({super.key, required this.className});
 
   @override
-  _ClassDetailsScreenState createState() => _ClassDetailsScreenState();
+  ClassDetailsScreenState createState() => ClassDetailsScreenState(); // Made the state class public
 }
 
-class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
+class ClassDetailsScreenState extends State<ClassDetailsScreen> {
+  // Removed the underscore to make it public
   bool _isLoading = true; // Track loading state
   String? _description; // Store the fetched description
   String? _errorMessage; // Store any error messages

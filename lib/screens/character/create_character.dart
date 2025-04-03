@@ -36,6 +36,8 @@ class _CreateCharacterState extends State<CreateCharacter> {
                   });
 
                   String description;
+                  bool shouldShowBottomSheet = true;
+
                   try {
                     description = await DndServices.getClassDescription(
                       classNameFormatted,
@@ -43,26 +45,34 @@ class _CreateCharacterState extends State<CreateCharacter> {
                   } catch (e) {
                     description = 'Error fetching class description.';
                   } finally {
-                    setState(() {
-                      _isLoading = false;
-                    });
+                    if (!mounted) {
+                      shouldShowBottomSheet = false;
+                    } else {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
                   }
 
-                  // Show the bottom sheet instead of a dialog
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16.0),
-                      ),
-                    ),
-                    builder:
-                        (context) => ClassDescriptionBottomSheet(
-                          className: className,
-                          description: description,
+                  // Ensure the widget is still mounted before using BuildContext
+                  if (shouldShowBottomSheet && mounted) {
+                    if (context.mounted) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(16.0),
+                          ),
                         ),
-                  );
+                        builder:
+                            (context) => ClassDescriptionBottomSheet(
+                              className: className,
+                              description: description,
+                            ),
+                      );
+                    }
+                  }
                 },
                 child: Container(
                   margin: EdgeInsets.all(8.0),
